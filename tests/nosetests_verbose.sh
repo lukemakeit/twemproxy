@@ -9,4 +9,6 @@ fi
 # Print test logging to stderr
 export T_LOGFILE=-
 
+cp ../src/nutcracker _binaries/nutcracker
+
 python3 -m nose -v --nologcapture --nocapture "$@"

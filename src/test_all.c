@@ -227,6 +227,7 @@ static void test_redis_parse_req_success(void) {
     test_redis_parse_req_success_case("*3\r\n$8\r\nzrevrank\r\n$4\r\nzfoo\r\n$3\r\nbar\r\n", MSG_REQ_REDIS_ZREVRANK);
     test_redis_parse_req_success_case("*3\r\n$6\r\nzscore\r\n$4\r\nzfoo\r\n$3\r\nbar\r\n", MSG_REQ_REDIS_ZSCORE);
     test_redis_parse_req_success_case("*5\r\n$11\r\nzunionstore\r\n$7\r\n{zfoo}3\r\n$1\r\n2\r\n$6\r\n{zfoo}\r\n$7\r\n{zfoo}2\r\n", MSG_REQ_REDIS_ZUNIONSTORE);
+    test_redis_parse_req_success_case("*2\r\n$9\r\nrandomkey\r\n", MSG_REQ_REDIS_RANDOMKEY);
 }
 
 static void test_redis_parse_rsp_success_case(const char* data, int expected) {

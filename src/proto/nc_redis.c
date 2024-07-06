@@ -364,6 +364,7 @@ redis_nokey(const struct msg *r)
 {
     switch (r->type) {
     case MSG_REQ_REDIS_LOLWUT:
+    case MSG_REQ_REDIS_RANDOMKEY:
         return true;
 
     default:
@@ -1201,6 +1202,14 @@ redis_parse_req(struct msg *r)
 
                 if (str9icmp(m, 'g', 'e', 'o', 'r', 'a', 'd', 'i', 'u', 's')) {
                     r->type = MSG_REQ_REDIS_GEORADIUS;
+                    break;
+                }
+
+                if (str9icmp(m, 'r', 'a', 'n', 'd', 'o', 'm', 'k', 'e', 'y')) {
+                    r->type = MSG_REQ_REDIS_RANDOMKEY;
+                    if (!msg_set_placeholder_key(r)) {
+                        goto enomem;
+                    }
                     break;
                 }
 

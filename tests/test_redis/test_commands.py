@@ -148,3 +148,9 @@ def test_select():
     assert_equal(True,val)
 
     assert_fail("only select 0 support",r.select,1)
+
+def test_randomkey():
+    r = getconn()
+    r.set('a',1)
+    r.set('b',2)
+    val=r.randomkey()
