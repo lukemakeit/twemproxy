@@ -74,3 +74,6 @@ test_all
 *.trs
 tags
 
+.codecc
+.idea
+.vscode
