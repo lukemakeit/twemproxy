@@ -226,4 +226,7 @@ const char *nc_unresolve_addr(struct sockaddr *addr, socklen_t addrlen);
 const char *nc_unresolve_peer_desc(int sd);
 const char *nc_unresolve_desc(int sd);
 
+int string2ll(const char *s, size_t slen, long long *value);
+int string2l(const char *s, size_t slen, long *value);
+
 #endif

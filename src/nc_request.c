@@ -490,10 +490,11 @@ static void req_update_for_scan(struct server_pool *pool,struct msg *msg)
     uint32_t keylen;
     struct keypos *kpos;
     uint32_t idx;
-    unsigned long long cursor;
-    unsigned long real_cursor;
-    char arr[16];
-    char format[16];
+    long long cursor;
+    long real_cursor;
+    char arr[1024]={0};
+    char format[1024]={0};
+    char keystr[64]={0};
 
     kpos = array_get(msg->keys, 0);
     key = kpos->start;
@@ -502,13 +503,14 @@ static void req_update_for_scan(struct server_pool *pool,struct msg *msg)
     if (keylen == 1 && key[0] == '0') {
         idx=0;
     }else{
-        cursor=strtoull((const char *)key,NULL,10);
+        nc_memcpy(keystr,key,keylen);
+        string2ll((const char *)key,keylen,&cursor);
         idx = cursor & NC_MAX_NSERVER_MASK;
         if (array_n(&pool->server)<=idx){
             idx=0;
         }
         real_cursor = (cursor >> NC_MAX_NSERVER_BITS);
-        sprintf(format,"%%0%dd",keylen);
+        sprintf(format,"%%0%dlld",keylen);
         sprintf(arr,format,real_cursor);
         nc_memcpy(key,arr,keylen);
     }

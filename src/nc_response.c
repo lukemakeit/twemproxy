@@ -145,7 +145,7 @@ rsp_update_for_scan(struct server_pool *pool,struct msg *request) {
     struct mbuf *mbuf,*nbuf;
     struct mbuf *first_mbuf;
     rstatus_t status;
-    char tmp_str[40];
+    char tmp_str[64]={0};
     int len;
 
     for(mbuf=STAILQ_FIRST(&response->mhdr);mbuf!=NULL;mbuf=nbuf){
@@ -157,8 +157,8 @@ rsp_update_for_scan(struct server_pool *pool,struct msg *request) {
     }
     ASSERT(nc_strncmp(first_mbuf->pos,"*2\r\n$",strlen("*2\r\n$")) ==0);
     uint8_t * p=nc_strchr(first_mbuf->pos + sizeof("*2\r\n$"),first_mbuf->last,'\n');
-    unsigned long cursor = strtoul((const char *)(p+1),NULL,10);
-    unsigned long next_cursor;
+    unsigned long long cursor = strtoull((const char *)p+1,NULL,10);
+    unsigned long long next_cursor;
     if(cursor == 0 && request->server_index == array_n(&pool->server)-1){
         // all redis servers have been scanned, and the scan command of the last redis server has returned.
         return;
@@ -175,8 +175,8 @@ rsp_update_for_scan(struct server_pool *pool,struct msg *request) {
     first_mbuf->pos = p+1;
 
     // we get a new head "*2\r\n$%d\r\n\%dr\n", the cursor contain server index
-    len=sprintf(tmp_str,"%ld",next_cursor);
-    status=msg_prepend_format(response,"*2\r\n$%d\r\n%ld\r\n",len,next_cursor);
+    len=sprintf(tmp_str,"%llu",next_cursor);
+    status=msg_prepend_format(response,"*2\r\n$%d\r\n%llu\r\n",len,next_cursor);
     ASSERT(status == NC_OK);
 }
 
